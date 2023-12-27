@@ -42,7 +42,7 @@ double collision_circles_cost_spiral(const std::vector<PathPoint>& spiral,
 
   for (auto wp : spiral) {
     if (collision) {
-      // LOG(INFO) << " ***** COLLISION DETECTED *********" << std::endl;
+      LOG(INFO) << " ***** COLLISION DETECTED *********" << std::endl;
       break;
     }
     double cur_x = wp.x;
@@ -70,7 +70,7 @@ double collision_circles_cost_spiral(const std::vector<PathPoint>& spiral,
           // TODO-Distance from circles to obstacles/actor: How do you calculate
           // the distance between the center of each circle and the
           // obstacle/actor
-          double dist = std::sqrt((obst.location.x-circle_center_x)*(obst.location.x-circle_center_x)+(obst.location.y-circle_center_y)*(obst.location.y-circle_center_y));  // <- Update
+          double dist = std::sqrt(std::pow((actor_center_x-circle_center_x), 2)+std::pow((actor_center_y-circle_center_y), 2));  // <- Update
 
           collision = (dist < (CIRCLE_RADII[c] + CIRCLE_RADII[c2]));
         }

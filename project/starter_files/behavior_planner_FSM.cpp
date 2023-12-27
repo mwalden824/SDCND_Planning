@@ -77,8 +77,7 @@ double BehaviorPlannerFSM::get_look_ahead_distance(const State& ego_state) {
   // TODO-Lookahead: One way to find a reasonable lookahead distance is to find
   // the distance you will need to come to a stop while traveling at speed V and
   // using a comfortable deceleration.
-  double g = 9.81;
-  double comfortable_decel = 0.5 * g;
+  double comfortable_decel = P_MAX_ACCEL;
   auto look_ahead_distance = (velocity_mag * velocity_mag) / (2 * comfortable_decel);  // <- Fix This
 
   // LOG(INFO) << "Calculated look_ahead_distance: " << look_ahead_distance;
@@ -128,7 +127,7 @@ State BehaviorPlannerFSM::state_transition(const State& ego_state, State goal,
       // LOG(INFO) << "BP - goal in junction";
 
       _active_maneuver = DECEL_TO_STOP;
-      // LOG(INFO) << "BP - changing to DECEL_TO_STOP";
+      LOG(INFO) << "BP - changing to DECEL_TO_STOP";
 
       // Let's backup a "buffer" distance behind the "STOP" point
       // LOG(INFO) << "BP- original STOP goal at: " << goal.location.x << ", "
@@ -179,7 +178,7 @@ State BehaviorPlannerFSM::state_transition(const State& ego_state, State goal,
     // distance
     auto distance_to_stop_sign =
         utils::magnitude(goal.location - ego_state.location);
-    // LOG(INFO) << "Ego distance to stop line: " << distance_to_stop_sign;
+    LOG(INFO) << "Ego distance to stop line: " << distance_to_stop_sign;
 
     // TODO-use distance rather than speed: Use distance rather than speed...
     // if (utils::magnitude(ego_state.velocity) <=
@@ -189,7 +188,7 @@ State BehaviorPlannerFSM::state_transition(const State& ego_state, State goal,
       // stopping point we should change state to "STOPPED"
       _active_maneuver = STOPPED;  // <- Fix This
       _start_stop_time = std::chrono::high_resolution_clock::now();
-      // LOG(INFO) << "BP - changing to STOPPED";
+      LOG(INFO) << "BP - changing to STOPPED";
     }
   } else if (_active_maneuver == STOPPED) {
     // LOG(INFO) << "BP- IN STOPPED STATE";
@@ -208,7 +207,7 @@ State BehaviorPlannerFSM::state_transition(const State& ego_state, State goal,
       // TODO-move to FOLLOW_LANE state: What state do we want to move to, when
       // we are "done" at the STOPPED state?
       _active_maneuver = FOLLOW_LANE;  // <- Fix This
-      // LOG(INFO) << "BP - changing to FOLLOW_LANE";
+      LOG(INFO) << "BP - changing to FOLLOW_LANE";
     }
   }
   _goal = goal;
